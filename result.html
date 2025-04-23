@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>检查结果</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            -webkit-print-color-adjust: exact; /* 确保打印/截图时颜色一致 */
+            print-color-adjust: exact;
+        }
+        header {
+            background-color: #4285f4;
+            color: white;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        .result-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .result-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .result-details {
+            margin-bottom: 2rem;
+        }
+        .detail-row {
+            display: flex;
+            margin-bottom: 1rem;
+        }
+        .detail-label {
+            font-weight: bold;
+            width: 120px;
+        }
+        .result-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+        }
+        .result-table th, 
+        .result-table td {
+            padding: 1rem;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        .result-table th {
+            background-color: #f4f4f4;
+            font-weight: bold;
+        }
+        .result-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .result-pass {
+            color: green;
+        }
+        .result-fail {
+            color: red;
+        }
+        .actions {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            text-decoration: none;
+        }
+        .btn-download {
+            background-color: #4285f4;
+            color: white;
+        }
+        .btn-download:hover {
+            background-color: #3367d6;
+        }
+        .btn-back {
+            background-color: #f1f1f1;
+            color: #333;
+        }
+        .btn-back:hover {
+            background-color: #ddd;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>检查结果</h1>
+        
+    </header>
+    
+    <div class="container">
+        <div class="result-card" id="resultContent">
+            <div class="result-header">
+                <h2>安全检查报告</h2>
+            </div>
+            
+            <div class="result-details">
+                <div class="detail-row">
+                    <div class="detail-label">检查人员:</div>
+                    <div id="inspector"></div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">检查时间:</div>
+                    <div id="inspectionDate"></div>
+                </div>
+            </div>
+            
+            <table class="result-table">
+                <thead>
+                    <tr>
+                        <th width="10%">检查项目</th>
+                        <th width="45%">检查内容</th>
+                        <th width="10%">检查结果</th>
+                        <th width="35%">原因说明</th>
+                    </tr>
+                </thead>
+                <tbody id="checkResults">
+                    <!-- 检查结果将在这里动态生成 -->
+                </tbody>
+            </table>
+            
+            <div class="actions">
+                <button class="btn btn-download" id="downloadImageBtn">下载图片报告</button>
+                <a href="home.html" class="btn btn-back">返回首页</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 引入html2canvas库 -->
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <script>
+        // 显示当前用户
+  
+
+        // 获取并显示检查结果
+        const results = JSON.parse(localStorage.getItem('inspectionResults'));
+        if (!results) {
+            window.location.href = 'checklist.html';
+        }
+        
+        document.getElementById('inspector').textContent = results.inspector;
+        document.getElementById('inspectionDate').textContent = results.checkDate;
+        
+        const checkResultsContainer = document.getElementById('checkResults');
+        results.checks.forEach(check => {
+            const row = document.createElement('tr');
+            
+            row.innerHTML = `
+                <td>${check.id}</td>
+                <td>${check.question}</td>
+                <td class="${check.result === '合格' ? 'result-pass' : 'result-fail'}">${check.result}</td>
+                <td>${check.reason}</td>
+            `;
+            
+            checkResultsContainer.appendChild(row);
+        });
+
+        // 图片下载功能
+        document.getElementById('downloadImageBtn').addEventListener('click', function() {
+            // 隐藏下载按钮避免出现在截图中
+            const downloadBtn = document.getElementById('downloadImageBtn');
+            const backBtn = document.querySelector('.btn-back');
+            downloadBtn.style.display = 'none';
+            backBtn.style.display = 'none';
+            
+            // 使用html2canvas生成图片
+            html2canvas(document.getElementById('resultContent'), {
+                scale: 2, // 提高图片质量
+                logging: false,
+                useCORS: true,
+                allowTaint: true,
+                backgroundColor: '#ffffff',
+                scrollX: 0,
+                scrollY: 0,
+                windowWidth: document.getElementById('resultContent').scrollWidth,
+                windowHeight: document.getElementById('resultContent').scrollHeight
+            }).then(canvas => {
+                // 恢复按钮显示
+                downloadBtn.style.display = '';
+                backBtn.style.display = '';
+                
+                // 创建下载链接
+                const link = document.createElement('a');
+                const timestamp = new Date().toISOString().slice(0, 10);
+                
+                link.download = `安全检查报告_${results.inspector}_${timestamp}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            }).catch(err => {
+                console.error('生成图片失败:', err);
+                alert('生成图片失败，请重试');
+                
+                // 确保按钮恢复显示
+                downloadBtn.style.display = '';
+                backBtn.style.display = '';
+            });
+        });
+    </script>
+</body>
+</html>

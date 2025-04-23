@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>检查表</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #4285f4;
+            color: white;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+		 .inspector-info {
+            background: #f9f9f9;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+        .info-item {
+            margin-bottom: 0.5rem;
+        }
+        .info-label {
+            font-weight: bold;
+            display: inline-block;
+            width: 80px;
+        }
+        .checklist-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 2rem;
+            background: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .checklist-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 2rem;
+            background: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .checklist-table th, 
+        .checklist-table td {
+            padding: 1rem;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        .checklist-table th {
+            background-color: #f4f4f4;
+            font-weight: bold;
+        }
+        .checklist-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .radio-group {
+            display: flex;
+            gap: 1rem;
+        }
+        .radio-group label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+        .reason-input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            display: none;
+        }
+        .reason-input textarea {
+            width: 100%;
+            min-height: 60px;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            resize: vertical;
+        }
+        .submit-btn {
+            display: block;
+            width: 200px;
+            margin: 0 auto;
+            padding: 0.75rem;
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        .submit-btn:hover {
+            background-color: #3367d6;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>安全检查表</h1>
+		<div id="headerInfo"></div>
+    </header>
+	<div class="container">
+        <div class="inspector-info">
+            <h3>检查员信息</h3>
+            <div class="info-item">
+                <span class="info-label">姓名:</span>
+                <span id="inspectorName"></span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">部门:</span>
+                <span id="department"></span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">签到时间:</span>
+                <span id="signinTime"></span>
+            </div>
+        </div>
+		
+        <form id="checklistForm">
+            <table class="checklist-table">
+                <thead>
+                    <tr>
+                        <th width="10%">项目</th>
+                        <th width="45%">检查内容</th>
+                        <th width="10%">检查结果</th>
+                        <th width="35%">原因说明(如选否)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>人员</td>
+                        <td>作业人员是否遵守安全操作规程</td>
+                        <td>
+                            <div class="radio-group">
+                                <label>
+                                    <input type="radio" name="q1" value="yes" checked> 是
+                                </label>
+                                <label>
+                                    <input type="radio" name="q1" value="no"> 否
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="reason-input" id="reason1">
+                                <textarea placeholder="请输入原因..." name="reason1"></textarea>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>人员</td>
+                        <td>从业人员是否掌握紧急情况下的应急措施，是否有不会使用消防灭火器的人员</td>
+                        <td>
+                            <div class="radio-group">
+                                <label>
+                                    <input type="radio" name="q2" value="yes" checked> 是
+                                </label>
+                                <label>
+                                    <input type="radio" name="q2" value="no"> 否
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="reason-input" id="reason2">
+                                <textarea placeholder="请输入原因" name="reason2"></textarea>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>人员</td>
+                        <td>特种作业人员持证上岗情况</td>
+                        <td>
+                            <div class="radio-group">
+                                <label>
+                                    <input type="radio" name="q3" value="yes" checked> 是
+                                </label>
+                                <label>
+                                    <input type="radio" name="q3" value="no"> 否
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="reason-input" id="reason3">
+                                <textarea placeholder="请输入不合格原因..." name="reason3"></textarea>
+                            </div>
+                        </td>
+                    </tr>
+					 <tr>
+                        <td>人员</td>
+                        <td>有无酒后上班；有无嬉戏、打闹、饮食;有无脱岗、睡岗、串岗等</td>
+                        <td>
+                            <div class="radio-group">
+                                <label>
+                                    <input type="radio" name="q4" value="yes" checked> 是
+                                </label>
+                                <label>
+                                    <input type="radio" name="q4" value="no"> 否
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="reason-input" id="reason4">
+                                <textarea placeholder="请输入不合格原因..." name="reason4"></textarea>
+                            </div>
+                        </td>
+                    </tr>
+					 <tr>
+                        <td>人员</td>
+                        <td>使用无安全装置的设备、工具</td>
+                        <td>
+                            <div class="radio-group">
+                                <label>
+                                    <input type="radio" name="q5" value="yes" checked> 是
+                                </label>
+                                <label>
+                                    <input type="radio" name="q5" value="no"> 否
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="reason-input" id="reason5">
+                                <textarea placeholder="请输入不合格原因..." name="reason5"></textarea>
+                            </div>
+                        </td>
+                    </tr> <tr>
+                        <td>人员</td>
+                        <td>有无在车间吸烟违章进入作业场所;有无在上班时间长期打电话聊天的</td>
+                        <td>
+                            <div class="radio-group">
+                                <label>
+                                    <input type="radio" name="q6" value="yes" checked> 是
+                                </label>
+                                <label>
+                                    <input type="radio" name="q6" value="no"> 否
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="reason-input" id="reason6">
+                                <textarea placeholder="请输入不合格原因..." name="reason6"></textarea>
+                            </div>
+                        </td>
+                    </tr> <tr>
+                        <td>人员</td>
+                        <td>有无攀坐或依靠机械、电器、设备等不安全位置</td>
+                        <td>
+                            <div class="radio-group">
+                                <label>
+                                    <input type="radio" name="q7" value="yes" checked> 是
+                                </label>
+                                <label>
+                                    <input type="radio" name="q7" value="no"> 否
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="reason-input" id="reason7">
+                                <textarea placeholder="请输入不合格原因..." name="reason7"></textarea>
+                            </div>
+                        </td>
+                    </tr> <tr>
+                        <td>人员</td>
+                        <td>是否有轻伤事故发生;是否有(其他)的不安全行为</td>
+                        <td>
+                            <div class="radio-group">
+                                <label>
+                                    <input type="radio" name="q8" value="yes" checked> 是
+                                </label>
+                                <label>
+                                    <input type="radio" name="q8" value="no"> 否
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="reason-input" id="reason8">
+                                <textarea placeholder="请输入不合格原因..." name="reason8"></textarea>
+                            </div>
+                        </td>
+                    </tr> <tr>
+                        <td>机械设备设施</td>
+                        <td>车间设备是否处于正常运转状态</td>
+                        <td>
+                            <div class="radio-group">
+                                <label>
+                                    <input type="radio" name="q9" value="yes" checked> 是
+                                </label>
+                                <label>
+                                    <input type="radio" name="q9" value="no"> 否
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="reason-input" id="reason9">
+                                <textarea placeholder="请输入不合格原因..." name="reason9"></textarea>
+                            </div>
+                        </td>
+                    </tr> <tr>
+                        <td>机械设备设施</td>
+                        <td>管道应无裂纹和渗漏，管道应保持畅通，密封良好，无跑、冒、滴、漏和腐蚀现象</td>
+                        <td>
+                            <div class="radio-group">
+                                <label>
+                                    <input type="radio" name="q10" value="yes" checked> 是
+                                </label>
+                                <label>
+                                    <input type="radio" name="q10" value="no"> 否
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="reason-input" id="reason10">
+                                <textarea placeholder="请输入不合格原因" name="reason10"></textarea>
+                            </div>
+                        </td>
+                    </tr> <tr>
+                        <td>机械设备设施</td>
+                        <td>机器运转时加油、修理、检查、调整（非允许部位）、焊接、清扫等工作</td>
+                        <td>
+                            <div class="radio-group">
+                                <label>
+                                    <input type="radio" name="q11" value="yes" checked> 是
+                                </label>
+                                <label>
+                                    <input type="radio" name="q11" value="no"> 否
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="reason-input" id="reason11">
+                                <textarea placeholder="请输入不合格原因" name="reason11"></textarea>
+                            </div>
+                        </td>
+                    </tr> <tr>
+                        <td>机械设备设施</td>
+                        <td>运转设备防护罩是否完好；有无防护罩未在适当位置或防护装置调整不当情况</td>
+                        <td>
+                            <div class="radio-group">
+                                <label>
+                                    <input type="radio" name="q12" value="yes" checked> 是
+                                </label>
+                                <label>
+                                    <input type="radio" name="q12" value="no"> 否
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="reason-input" id="reason12">
+                                <textarea placeholder="请输入不合格原因" name="reason12"></textarea>
+                            </div>
+                        </td>
+                    </tr> <tr>
+                        <td>机械设备设施</td>
+                        <td>有无设备带“病”运转或超负荷运转</td>
+                        <td>
+                            <div class="radio-group">
+                                <label>
+                                    <input type="radio" name="q13" value="yes" checked> 是
+                                </label>
+                                <label>
+                                    <input type="radio" name="q13" value="no"> 否
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="reason-input" id="reason13">
+                                <textarea placeholder="请输入不合格原因" name="reason13"></textarea>
+                            </div>
+                        </td>
+                    </tr> <tr>
+                        <td>机械设备设施</td>
+                        <td>有无维修调整不良或保养不当、设备失灵情况</td>
+                        <td>
+                            <div class="radio-group">
+                                <label>
+                                    <input type="radio" name="q14" value="yes" checked> 是
+                                </label>
+                                <label>
+                                    <input type="radio" name="q14" value="no"> 否
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="reason-input" id="reason14">
+                                <textarea placeholder="请输入不合格原因" name="reason14"></textarea>
+                            </div>
+                        </td>
+                    </tr> <tr>
+                        <td>机械设备设施</td>
+                        <td>设备设施是否定期进行维护保养与检修</td>
+                        <td>
+                            <div class="radio-group">
+                                <label>
+                                    <input type="radio" name="q15" value="yes" checked> 是
+                                </label>
+                                <label>
+                                    <input type="radio" name="q15" value="no"> 否
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="reason-input" id="reason15">
+                                <textarea placeholder="请输入不合格原因" name="reason15"></textarea>
+                            </div>
+                        </td>
+                    </tr> <tr>
+                        <td>机械设备设施</td>
+                        <td>检修施工作业是否遵守有关规定和标准执行（检修传动设备要先停电 、挂警示牌上护栏；试转要站旁边）</td>
+                        <td>
+                            <div class="radio-group">
+                                <label>
+                                    <input type="radio" name="q16" value="yes" checked> 是
+                                </label>
+                                <label>
+                                    <input type="radio" name="q16" value="no"> 否
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="reason-input" id="reason16">
+                                <textarea placeholder="请输入不合格原因" name="reason16"></textarea>
+                            </div>
+                        </td>
+                    </tr> <tr>
+                        <td>机械设备设施</td>
+                        <td>特种设备是否按照国家有关规定取得检验、检测合格证，并在有效期间内</td>
+                        <td>
+                            <div class="radio-group">
+                                <label>
+                                    <input type="radio" name="q17" value="yes" checked> 是
+                                </label>
+                                <label>
+                                    <input type="radio" name="q17" value="no"> 否
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="reason-input" id="reason17">
+                                <textarea placeholder="请输入不合格原因" name="reason17"></textarea>
+                            </div>
+                        </td>
+                    </tr> <tr>
+                        <td>机械设备设施</td>
+                        <td>维修、调整不良或保养不当、设备失灵等情况</td>
+                        <td>
+                            <div class="radio-group">
+                                <label>
+                                    <input type="radio" name="q18" value="yes" checked> 是
+                                </label>
+                                <label>
+                                    <input type="radio" name="q18" value="no"> 否
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="reason-input" id="reason18">
+                                <textarea placeholder="请输入不合格原因" name="reason18"></textarea>
+                            </div>
+                        </td>
+                    </tr> <tr>
+                        <td>机械设备设施</td>
+                        <td>机械设备有无跑、冒、滴、漏及腐蚀现象</td>
+                        <td>
+                            <div class="radio-group">
+                                <label>
+                                    <input type="radio" name="q19" value="yes" checked> 是
+                                </label>
+                                <label>
+                                    <input type="radio" name="q19" value="no"> 否
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="reason-input" id="reason19">
+                                <textarea placeholder="请输入不合格原因" name="reason19"></textarea>
+                            </div>
+                        </td>
+                    </tr> <tr>
+                        <td>电器设备</td>
+                        <td>电器设备的金属外壳绝缘是否良好</td>
+                        <td>
+                            <div class="radio-group">
+                                <label>
+                                    <input type="radio" name="q20" value="yes" checked> 是
+                                </label>
+                                <label>
+                                    <input type="radio" name="q20" value="no"> 否
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="reason-input" id="reason20">
+                                <textarea placeholder="请输入不合格原因" name="reason20"></textarea>
+                            </div>
+                        </td>
+                    </tr> <tr>
+                        <td>电器设备</td>
+                        <td>机械设备接地、接零是否完整良好</td>
+                        <td>
+                            <div class="radio-group">
+                                <label>
+                                    <input type="radio" name="q21" value="yes" checked> 是
+                                </label>
+                                <label>
+                                    <input type="radio" name="q21" value="no"> 否
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="reason-input" id="reason21">
+                                <textarea placeholder="请输入不合格原因" name="reason21"></textarea>
+                            </div>
+                        </td>
+                    </tr> <tr>
+                        <td>电器设备</td>
+                        <td>有无绝缘不良、绝缘强度不够;有无电气装置带电部分裸露</td>
+                        <td>
+                            <div class="radio-group">
+                                <label>
+                                    <input type="radio" name="q22" value="yes" checked> 是
+                                </label>
+                                <label>
+                                    <input type="radio" name="q22" value="no"> 否
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="reason-input" id="reason22">
+                                <textarea placeholder="请输入不合格原因" name="reason22"></textarea>
+                            </div>
+                        </td>
+                    </tr> <tr>
+                        <td>电器设备</td>
+                        <td>有无开关、插座、接触器等有无因接触不良而严重发热</td>
+                        <td>
+                            <div class="radio-group">
+                                <label>
+                                    <input type="radio" name="q23" value="yes" checked> 是
+                                </label>
+                                <label>
+                                    <input type="radio" name="q23" value="no"> 否
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="reason-input" id="reason23">
+                                <textarea placeholder="请输入不合格原因" name="reason23"></textarea>
+                            </div>
+                        </td>
+                    </tr> <tr>
+                        <td>电器设备</td>
+                        <td>电器开关外壳是否完整可靠，有无破损</td>
+                        <td>
+                            <div class="radio-group">
+                                <label>
+                                    <input type="radio" name="q24" value="yes" checked> 是
+                                </label>
+                                <label>
+                                    <input type="radio" name="q24" value="no"> 否
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="reason-input" id="reason24">
+                                <textarea placeholder="请输入不合格原因" name="reason24"></textarea>
+                            </div>
+                        </td>
+                    </tr> <tr>
+                        <td>电器设备</td>
+                        <td>有无电线电缆乱拉乱接（架设符合规范），临时用电线路是否及时拆除</td>
+                        <td>
+                            <div class="radio-group">
+                                <label>
+                                    <input type="radio" name="q25" value="yes" checked> 是
+                                </label>
+                                <label>
+                                    <input type="radio" name="q25" value="no"> 否
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="reason-input" id="reason25">
+                                <textarea placeholder="请输入不合格原因" name="reason25"></textarea>
+                            </div>
+                        </td>
+                    </tr> <tr>
+                        <td>电器设备</td>
+                        <td>临时线路需用良好的橡套电缆，长度不宜超过 10m，线上不得有接头</td>
+                        <td>
+                            <div class="radio-group">
+                                <label>
+                                    <input type="radio" name="q26" value="yes" checked> 是
+                                </label>
+                                <label>
+                                    <input type="radio" name="q26" value="no"> 否
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="reason-input" id="reason26">
+                                <textarea placeholder="请输入不合格原因" name="reason26"></textarea>
+                            </div>
+                        </td>
+                    </tr> <tr>
+                        <td>电器设备</td>
+                        <td>特殊环境（潮湿、粉尘、易燃易爆）的照明（密封、防爆式）；是否使用安全电压和选用合适的漏电保护器</td>
+                        <td>
+                            <div class="radio-group">
+                                <label>
+                                    <input type="radio" name="q27" value="yes" checked> 是
+                                </label>
+                                <label>
+                                    <input type="radio" name="q27" value="no"> 否
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="reason-input" id="reason27">
+                                <textarea placeholder="请输入不合格原因" name="reason27"></textarea>
+                            </div>
+                        </td>
+                    </tr> <tr>
+                        <td>作业环境</td>
+                        <td>车间内外应保持整齐、清洁、通道平坦、畅通</td>
+                        <td>
+                            <div class="radio-group">
+                                <label>
+                                    <input type="radio" name="q28" value="yes" checked> 是
+                                </label>
+                                <label>
+                                    <input type="radio" name="q28" value="no"> 否
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="reason-input" id="reason28">
+                                <textarea placeholder="请输入不合格原因" name="reason28"></textarea>
+                            </div>
+                        </td>
+                    </tr> <tr>
+                        <td>作业环境</td>
+                        <td>安全标志是否完整、清晰</td>
+                        <td>
+                            <div class="radio-group">
+                                <label>
+                                    <input type="radio" name="q29" value="yes" checked> 是
+                                </label>
+                                <label>
+                                    <input type="radio" name="q29" value="no"> 否
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="reason-input" id="reason29">
+                                <textarea placeholder="请输入不合格原因" name="reason29"></textarea>
+                            </div>
+                        </td>
+                    </tr> <tr>
+                        <td>作业环境</td>
+                        <td>安全告示牌是否完整清晰，灭火器使用方法是否设置清晰</td>
+                        <td>
+                            <div class="radio-group">
+                                <label>
+                                    <input type="radio" name="q30" value="yes" checked> 是
+                                </label>
+                                <label>
+                                    <input type="radio" name="q30" value="no"> 否
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="reason-input" id="reason30">
+                                <textarea placeholder="请输入不合格原因" name="reason30"></textarea>
+                            </div>
+                        </td>
+                    </tr> <tr>
+                        <td>作业环境</td>
+                        <td>油漆作业场所的防毒面具是否在有效期内，是否处于使用可靠状态</td>
+                        <td>
+                            <div class="radio-group">
+                                <label>
+                                    <input type="radio" name="q31" value="yes" checked> 是
+                                </label>
+                                <label>
+                                    <input type="radio" name="q31" value="no"> 否
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="reason-input" id="reason31">
+                                <textarea placeholder="请输入不合格原因" name="reason31"></textarea>
+                            </div>
+                        </td>
+                    </tr> <tr>
+                        <td>作业环境</td>
+                        <td>使用有害物品作业场所警示标识是否完整清晰</td>
+                        <td>
+                            <div class="radio-group">
+                                <label>
+                                    <input type="radio" name="q32" value="yes" checked> 是
+                                </label>
+                                <label>
+                                    <input type="radio" name="q32" value="no"> 否
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="reason-input" id="reason32">
+                                <textarea placeholder="请输入不合格原因" name="reason32"></textarea>
+                            </div>
+                        </td>
+                    </tr> <tr>
+                        <td>作业环境</td>
+                        <td>通风设施设备是否良好</td>
+                        <td>
+                            <div class="radio-group">
+                                <label>
+                                    <input type="radio" name="q33" value="yes" checked> 是
+                                </label>
+                                <label>
+                                    <input type="radio" name="q33" value="no"> 否
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="reason-input" id="reason33">
+                                <textarea placeholder="请输入不合格原因" name="reason33"></textarea>
+                            </div>
+                        </td>
+                    </tr> <tr>
+                        <td>作业环境</td>
+                        <td>通道标志线应用油漆涂刷，并保持清晰</td>
+                        <td>
+                            <div class="radio-group">
+                                <label>
+                                    <input type="radio" name="q34" value="yes" checked> 是
+                                </label>
+                                <label>
+                                    <input type="radio" name="q34" value="no"> 否
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="reason-input" id="reason34">
+                                <textarea placeholder="请输入不合格原因" name="reason34"></textarea>
+                            </div>
+                        </td>
+                    </tr> <tr>
+                        <td>作业环境</td>
+                        <td>安全操作规程是否完整、清晰，是否悬挂上墙</td>
+                        <td>
+                            <div class="radio-group">
+                                <label>
+                                    <input type="radio" name="q35" value="yes" checked> 是
+                                </label>
+                                <label>
+                                    <input type="radio" name="q35" value="no"> 否
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="reason-input" id="reason35">
+                                <textarea placeholder="请输入不合格原因" name="reason35"></textarea>
+                            </div>
+                        </td>
+                    </tr> <tr>
+                        <td>作业环境</td>
+                        <td>车间照明灯具是否完好</td>
+                        <td>
+                            <div class="radio-group">
+                                <label>
+                                    <input type="radio" name="q36" value="yes" checked> 是
+                                </label>
+                                <label>
+                                    <input type="radio" name="q36" value="no"> 否
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="reason-input" id="reason36">
+                                <textarea placeholder="请输入不合格原因" name="reason36"></textarea>
+                            </div>
+                        </td>
+                    </tr> <tr>
+                        <td>作业环境</td>
+                        <td>原料、成品、半成品是否摆放在规定区域，是否整齐、平稳</td>
+                        <td>
+                            <div class="radio-group">
+                                <label>
+                                    <input type="radio" name="q37" value="yes" checked> 是
+                                </label>
+                                <label>
+                                    <input type="radio" name="q37" value="no"> 否
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="reason-input" id="reason37">
+                                <textarea placeholder="请输入不合格原因" name="reason37"></textarea>
+                            </div>
+                        </td>
+                    </tr> <tr>
+                        <td>作业环境</td>
+                        <td>车间使用的工器具，工具箱等是否摆放整齐、平稳</td>
+                        <td>
+                            <div class="radio-group">
+                                <label>
+                                    <input type="radio" name="q38" value="yes" checked> 是
+                                </label>
+                                <label>
+                                    <input type="radio" name="q38" value="no"> 否
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="reason-input" id="reason38">
+                                <textarea placeholder="请输入不合格原因" name="reason38"></textarea>
+                            </div>
+                        </td>
+                    </tr> <tr>
+                        <td>作业环境</td>
+                        <td>作业场所地面应该平整、无积水、无积液、无垃圾杂物、无障碍物、无绊脚物等</td>
+                        <td>
+                            <div class="radio-group">
+                                <label>
+                                    <input type="radio" name="q39" value="yes" checked> 是
+                                </label>
+                                <label>
+                                    <input type="radio" name="q39" value="no"> 否
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="reason-input" id="reason39">
+                                <textarea placeholder="请输入不合格原因" name="reason39"></textarea>
+                            </div>
+                        </td>
+                    </tr> <tr>
+                        <td>作业环境</td>
+                        <td>门窗是否有破损；窗户玻璃是否完整、有无缺少破损</td>
+                        <td>
+                            <div class="radio-group">
+                                <label>
+                                    <input type="radio" name="q40" value="yes" checked> 是
+                                </label>
+                                <label>
+                                    <input type="radio" name="q40" value="no"> 否
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="reason-input" id="reason40">
+                                <textarea placeholder="请输入不合格原因" name="reason40"></textarea>
+                            </div>
+                        </td>
+                    </tr> <tr>
+                        <td>消防设施</td>
+                        <td>消防通道是否被堵塞占用；安全疏散通道、安全出口是否通畅</td>
+                        <td>
+                            <div class="radio-group">
+                                <label>
+                                    <input type="radio" name="q41" value="yes" checked> 是
+                                </label>
+                                <label>
+                                    <input type="radio" name="q41" value="no"> 否
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="reason-input" id="reason41">
+                                <textarea placeholder="请输入不合格原因" name="reason41"></textarea>
+                            </div>
+                        </td>
+                    </tr> <tr>
+                        <td>消防设施</td>
+                        <td>通向灭火器的通道是否畅通无阻;消防器材、设施周围是否被堵塞占用</td>
+                        <td>
+                            <div class="radio-group">
+                                <label>
+                                    <input type="radio" name="q42" value="yes" checked> 是
+                                </label>
+                                <label>
+                                    <input type="radio" name="q42" value="no"> 否
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="reason-input" id="reason42">
+                                <textarea placeholder="请输入不合格原因" name="reason42"></textarea>
+                            </div>
+                        </td>
+                    </tr> <tr>
+                        <td>消防设施</td>
+                        <td>灭火器使用说明是否清晰完整</td>
+                        <td>
+                            <div class="radio-group">
+                                <label>
+                                    <input type="radio" name="q43" value="yes" checked> 是
+                                </label>
+                                <label>
+                                    <input type="radio" name="q43" value="no"> 否
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="reason-input" id="reason43">
+                                <textarea placeholder="请输入不合格原因" name="reason43"></textarea>
+                            </div>
+                        </td>
+                    </tr> <tr>
+                        <td>消防设施</td>
+                        <td>应急照明灯具是否完好</td>
+                        <td>
+                            <div class="radio-group">
+                                <label>
+                                    <input type="radio" name="q44" value="yes" checked> 是
+                                </label>
+                                <label>
+                                    <input type="radio" name="q44" value="no"> 否
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="reason-input" id="reason44">
+                                <textarea placeholder="请输入不合格原因" name="reason44"></textarea>
+                            </div>
+                        </td>
+                    </tr> <tr>
+                        <td>职业卫生</td>
+                        <td>饮水设施是否完整，是否有损坏、损毁情况</td>
+                        <td>
+                            <div class="radio-group">
+                                <label>
+                                    <input type="radio" name="q45" value="yes" checked> 是
+                                </label>
+                                <label>
+                                    <input type="radio" name="q45" value="no"> 否
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="reason-input" id="reason45">
+                                <textarea placeholder="请输入不合格原因" name="reason45"></textarea>
+                            </div>
+                        </td>
+                    </tr> <tr>
+                        <td>职业卫生</td>
+                        <td>在必须使用个人防护用品用具的作业或场合中，忽视其使用（未戴护目镜或面罩、未戴防护手套、未穿安全鞋、未戴安全帽、未戴工作帽、未戴耳塞等</td>
+                        <td>
+                            <div class="radio-group">
+                                <label>
+                                    <input type="radio" name="q46" value="yes" checked> 是
+                                </label>
+                                <label>
+                                    <input type="radio" name="q46" value="no"> 否
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="reason-input" id="reason46">
+                                <textarea placeholder="请输入不合格原因" name="reason46"></textarea>
+                            </div>
+                        </td>
+                    </tr> <tr>
+                        <td>职业卫生</td>
+                        <td>急救药品是否在有效时间内，是否及时补充</td>
+                        <td>
+                            <div class="radio-group">
+                                <label>
+                                    <input type="radio" name="q47" value="yes" checked> 是
+                                </label>
+                                <label>
+                                    <input type="radio" name="q47" value="no"> 否
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="reason-input" id="reason47">
+                                <textarea placeholder="请输入不合格原因" name="reason47"></textarea>
+                            </div>
+                        </td>
+                    </tr> <tr>
+                        <td>职业卫生</td>
+                        <td>自来水管是否有跑、冒、滴、漏水，水龙头是否漏水</td>
+                        <td>
+                            <div class="radio-group">
+                                <label>
+                                    <input type="radio" name="q48" value="yes" checked> 是
+                                </label>
+                                <label>
+                                    <input type="radio" name="q48" value="no"> 否
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="reason-input" id="reason48">
+                                <textarea placeholder="请输入不合格原因" name="reason48"></textarea>
+                            </div>
+                        </td>
+                    </tr> 
+                    <!-- 可以添加3多项目 -->
+                </tbody>
+            </table>
+            
+            <button type="submit" class="submit-btn">提交检查</button>
+        </form>
+    </div>
+
+ <script>
+        // 显示/隐藏原因输入框
+        document.querySelectorAll('input[type="radio"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const questionNum = this.name.substring(1);
+                const reasonDiv = document.getElementById(`reason${questionNum}`);
+                
+                if (this.value === 'no') {
+                    reasonDiv.style.display = 'block';
+                } else {
+                    reasonDiv.style.display = 'none';
+                }
+            });
+        });
+        
+        // 显示检查员信息
+        const inspectorInfo = JSON.parse(localStorage.getItem('inspectorInfo'));
+        if (!inspectorInfo) {
+            alert('请先进行签到！');
+            window.location.href = 'signin.html';
+        } else {
+            document.getElementById('inspectorName').textContent = inspectorInfo.name;
+            document.getElementById('department').textContent = inspectorInfo.department;
+            document.getElementById('signinTime').textContent = inspectorInfo.signinTime;
+            document.getElementById('headerInfo').textContent = `检查员: ${inspectorInfo.name}`;
+        }
+
+        // 表单提交
+        document.getElementById('checklistForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const results = {
+                inspector: inspectorInfo.name,
+                department: inspectorInfo.department,
+                employeeId: inspectorInfo.employeeId,
+                checkDate: new Date().toLocaleString(),
+                checks: []
+            };
+            
+            // 收集检查结果
+            const tableRows = document.querySelectorAll('.checklist-table tbody tr');
+            tableRows.forEach((row, index) => {
+                const questionNum = index + 1;
+                const question = row.querySelector('td:nth-child(2)').textContent;
+                const answer = formData.get(`q${questionNum}`);
+                
+                results.checks.push({
+                    id: questionNum,
+                    question: question,
+                    result: answer === 'yes' ? '合格' : '不合格',
+                    reason: answer === 'no' ? formData.get(`reason${questionNum}`) : '无'
+                });
+            });
+            
+            // 存储结果并跳转
+            localStorage.setItem('inspectionResults', JSON.stringify(results));
+            window.location.href = 'result.html';
+        });
+    </script>
+</body>
+</html>
+
